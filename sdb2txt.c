@@ -4,14 +4,14 @@
 	Originally coded by @AlexPowerUp, modified
 	by @Areidz.
 
-	Version: 1.0.1
+	Version: 1.0.2
 
 	Link: http://sourceforge.net/projects/sdb2txtdwds/
 */
 #include <stdio.h>
 #include <stdlib.h>
 
-	//To replace original Pause_System();
+	//To replace original pause_system();
 #ifdef WIN32
     #include <conio.h>
 #elif LINUX
@@ -20,54 +20,56 @@
 	#error You need another OS
 #endif
  
-void Pause_System(void);
-long int Get_ptr_number(FILE *filein);
-long int Get_ptr_string(FILE *filein, int number);
+void pause_system(void);
+long int get_ptr_number(FILE *filein);
+long int get_ptr_string(FILE *filein, int number);
 
 int main(int argc, char *argv[])
 {
 	//Variables
-    int i, pointers, charbuffer, final = 0;
+	unsigned int i, final = 0;
+    int pointers, charBuffer;
     FILE *fileInput, *fileOutput;
 
     /*To check if we can read and write
-    the correct files.			     */
+    the correct files.			     
+    */
     if(argc == 3)
     {
         fileInput = fopen(argv[1], "rb");
         if(!fileInput)
         {
             printf("Couldn't read the file.\n");
-            Pause_System();
+            pause_system();
             return 0;
         }
         fileOutput = fopen(argv[2], "wb");
         if(!fileOutput)
         {
             printf("Couldn't create the output.\n");
-            Pause_System();
+            pause_system();
             return 0;
         }
     }
     else
     {
-	    printf("Error in the syntax.\nUse: sdb2txt.exe <SDB file(input)> <TXT file(output)>\n");
-	    Pause_System();
+	    printf("Error in the syntax.\nUsage: sdb2txt.exe <SDB file(input)> <TXT file(output)>\n");
+	    pause_system();
 	    return 0;
     }
 
-    pointers = Get_ptr_number(fileInput);
+    pointers = get_ptr_number(fileInput);
 
     printf("The SDB file has %d strings.\n", pointers);
     printf("Transforming...\n");
 
     for(i=0;i<pointers;i++)
     {
-        fseek(fileInput, Get_ptr_string(fileInput, i), SEEK_SET);
+        fseek(fileInput, get_ptr_string(fileInput, i), SEEK_SET);
         while(final == 0)
         {
-            charbuffer = fgetc(fileInput);
-            switch(charbuffer)
+            charBuffer = fgetc(fileInput);
+            switch(charBuffer)
             {
                 case 0x50:
                     if(fgetc(fileInput) == 0x00) fputc((int) 'A', fileOutput);
@@ -343,7 +345,11 @@ int main(int argc, char *argv[])
                     if(fgetc(fileInput) == 0x00) fputc((int) '"', fileOutput);
                     break;
                 case 0xFF: //end of string
-                    if(fgetc(fileInput) == 0xFF) {fputc(0x10, fileOutput);/* fputc(0x0D, fileOutput); fputc(0x0A, fileOutput);*/ final = 1;}
+                    if(fgetc(fileInput) == 0xFF) {
+                    	fputc(0x10, fileOutput);
+                    	/* fputc(0x0D, fileOutput); fputc(0x0A, fileOutput);*/ 
+                    	final = 1;
+                    }
                     break;
                 case 0xFD: //go one text line down
                     if(fgetc(fileInput) == 0xFF) fputc(0xAC, fileOutput);
@@ -361,7 +367,11 @@ int main(int argc, char *argv[])
                     if(fgetc(fileInput) == 0x00) fputc(0x0E, fileOutput);
                     break;
                 case 0xFE: //alternative end of string (only works with the others msg folders)
-                    if(fgetc(fileInput) == 0xFF) {fputc(0x15, fileOutput); /*fputc(0x0D, fileOutput); fputc(0x0A, fileOutput);*/ final = 1;}
+                    if(fgetc(fileInput) == 0xFF) {
+                    	fputc(0x15, fileOutput);
+                     	/*fputc(0x0D, fileOutput); fputc(0x0A, fileOutput);*/ 
+                     	final = 1;
+                     }
                     break;
                 case 0x0B:
                     if(fgetc(fileInput) == 0x00) fputc((int) '/', fileOutput);
@@ -415,8 +425,8 @@ int main(int argc, char *argv[])
                     if(fgetc(fileInput) == 0x00) fputc(0x13, fileOutput);
                     break;
                 default:
-                    printf("New char found: 0x%X%X\n", charbuffer, fgetc(fileOutput));
-                    Pause_System(); 
+                    printf("New char found: 0x%X%X\n", charBuffer, fgetc(fileOutput));
+                    pause_system(); 
                     break;
             }
         }
@@ -426,43 +436,51 @@ int main(int argc, char *argv[])
     return 0;
 }
 
-long int Get_ptr_number(FILE *filein)
+long int get_ptr_number(FILE *filein)
 {
-    long int pointercache[3];
+    long int pointerCache[3];
     //int currentposition = ftell(filein);
     fseek(filein, 0, SEEK_SET);
-    int i;
-    for(i=0;i<4;i++) pointercache[i] = fgetc(filein);
-    long int pointerfinal = pointercache[0] + (pointercache[1]*0x100) + (pointercache[2]*0x10000) + (pointercache[3]*0x1000000);
+
+    unsigned int i;
+    for(i=0;i<4;i++) 
+    	pointerCache[i] = fgetc(filein);
+
+    long int pointerFinal = pointerCache[0] + (pointerCache[1]*0x100) + (pointerCache[2]*0x10000) + (pointerCache[3]*0x1000000);
+
     //fseek(filein, currentposition, SEEK_SET);
-    return (pointerfinal/4);
+    return (pointerFinal/4);
 }
 
-long int Get_ptr_string(FILE *filein, int number)
+long int get_ptr_string(FILE *filein, int number)
 {
-    /*if(number > Get_ptr_number(filein))
+    /*if(number > get_ptr_number(filein))
     {
-        printf("Error: This file has %d strings, but you are trying to access to the %d string. May cause an overflow, so leaving...\n", Get_ptr_number(filein), number);
-        Pause_System();
+        printf("Error: This file has %d strings, but you are trying to access to the %d string. May cause an overflow, so leaving...\n", get_ptr_number(filein), number);
+        pause_system();
         return -1;
     }*/
-    long int pointercache[3];
+    long int pointerCache[3];
     //int currentposition = ftell(filein);
     fseek(filein, (4*number), SEEK_SET);
-    int i;
-    for(i=0;i<4;i++) pointercache[i] = fgetc(filein);
-    long int pointerfinal = pointercache[0] + (pointercache[1]*0x100) + (pointercache[2]*0x10000) + (pointercache[3]*0x1000000);
+
+    unsigned int i;
+    for(i=0;i<4;i++) 
+    	pointerCache[i] = fgetc(filein);
+
+    long int pointerFinal = pointerCache[0] + (pointerCache[1]*0x100) + (pointerCache[2]*0x10000) + (pointerCache[3]*0x1000000);
+
     //fseek(filein, currentposition, SEEK_SET);
-    return pointerfinal;
+    return pointerFinal;
 }
 
-void Pause_System(void)
+void pause_system(void)
 {
-     int ch;
+     char ch;
       
      /* flush the input buffer, just in case */
      while ((ch = getchar()) != '\n' && ch != EOF);
       
-     printf("Press any key to continue.. ");
-     getch();
+     //printf("Press any key to continue.. ");
+     //getch();
 }
