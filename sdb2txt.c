@@ -12,13 +12,13 @@
 #include <stdlib.h>
 
 	//To replace original pause_system();
-#ifdef WIN32
-    #include <conio.h>
-#elif LINUX
+//#ifdef WIN32
+//    #include <conio.h>
+//#elif LINUX
     #include <ncurses.h>
-#else
-	#error You need another OS
-#endif
+//#else
+//	#error You need another OS
+//#endif
  
 void pause_system(void);
 long int get_ptr_number(FILE *filein);
@@ -288,49 +288,49 @@ int main(int argc, char *argv[])
                     if(fgetc(fileInput) == 0x00) fputc((int) '+', fileOutput);
                     break;
                 case 0x20:
-                    if(fgetc(fileInput) == 0x00) fputc((int) 'ø', fileOutput);
+                    if(fgetc(fileInput) == 0x00) fputc((int) '¬ø', fileOutput);
                     break;
                 case 0x32:
-                    if(fgetc(fileInput) == 0x00) fputc((int) '·', fileOutput);
+                    if(fgetc(fileInput) == 0x00) fputc((int) '√°', fileOutput);
                     break;
                 case 0x30:
-                    if(fgetc(fileInput) == 0x00) fputc((int) 'Ò', fileOutput);
+                    if(fgetc(fileInput) == 0x00) fputc((int) '√±', fileOutput);
                     break;
                 case 0x31:
-                    if(fgetc(fileInput) == 0x00) fputc((int) 'È', fileOutput);
+                    if(fgetc(fileInput) == 0x00) fputc((int) '√©', fileOutput);
                     break;
                 case 0x21:
-                    if(fgetc(fileInput) == 0x00) fputc((int) '°', fileOutput);
+                    if(fgetc(fileInput) == 0x00) fputc((int) '¬°', fileOutput);
                     break;
                 case 0x0E:
                     if(fgetc(fileInput) == 0x00) fputc(0x27, fileOutput);
                     break;
                 case 0x40:
-                    if(fgetc(fileInput) == 0x00) fputc((int) 'Ì', fileOutput);
+                    if(fgetc(fileInput) == 0x00) fputc((int) '√≠', fileOutput);
                     break;
                 case 0x41:
-                    if(fgetc(fileInput) == 0x00) fputc((int) 'Û', fileOutput);
+                    if(fgetc(fileInput) == 0x00) fputc((int) '√≥', fileOutput);
                     break;
                 case 0x42:
-                    if(fgetc(fileInput) == 0x00) fputc((int) '˙', fileOutput);
+                    if(fgetc(fileInput) == 0x00) fputc((int) '√∫', fileOutput);
                     break;
                 case 0x43:
-                    if(fgetc(fileInput) == 0x00) fputc((int) '¸', fileOutput);
+                    if(fgetc(fileInput) == 0x00) fputc((int) '√º', fileOutput);
                     break;
                 case 0x44:
-                    if(fgetc(fileInput) == 0x00) fputc((int) '¡', fileOutput);
+                    if(fgetc(fileInput) == 0x00) fputc((int) '√Å', fileOutput);
                     break;
                 case 0x45:
-                    if(fgetc(fileInput) == 0x00) fputc((int) '…', fileOutput);
+                    if(fgetc(fileInput) == 0x00) fputc((int) '√â', fileOutput);
                     break;
                 case 0x46:
-                    if(fgetc(fileInput) == 0x00) fputc((int) 'Õ', fileOutput);
+                    if(fgetc(fileInput) == 0x00) fputc((int) '√ç', fileOutput);
                     break;
                 case 0x47:
-                    if(fgetc(fileInput) == 0x00) fputc((int) '⁄', fileOutput);
+                    if(fgetc(fileInput) == 0x00) fputc((int) '√ö', fileOutput);
                     break;
                 case 0x48:
-                    if(fgetc(fileInput) == 0x00) fputc((int) '”', fileOutput);
+                    if(fgetc(fileInput) == 0x00) fputc((int) '√ì', fileOutput);
                     break;
                 case 0x4A: //gamma
                     if(fgetc(fileInput) == 0x00) fputc(0x03, fileOutput);
