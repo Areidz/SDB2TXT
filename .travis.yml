@@ -1,2 +1,2 @@
 language: c
-script: make
+script: gcc -o prueba sdb2txt.c -I
