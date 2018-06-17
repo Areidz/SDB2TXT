@@ -7,6 +7,10 @@ Program used to dump the SDB files of 'Digimon World DS' to TXT files.
 $ sdb2txt [input.sdb] [output.txt]
 ```
 
+### Download
+
+Download it on https://github.com/Areidz/SDB2TXT/releases
+
 License
 ----
 
